@@ -17,7 +17,6 @@ source_train_ds,source_test_ds,target_train_ds,target_test_ds = dataloader.load_
 # base model
 model_args = edict({"units":[128,64,32,5], "activations":["relu","relu","relu","softmax"]})
 model = DNN(units=model_args.units, activations=model_args.activations)
-model_buffer = []
 
 
 # metrics
@@ -55,13 +54,15 @@ def _test_step(inputs, labels):
 
 def copy_weights(variables):
     weights = [w.numpy() for w in variables]
-    model_buffer.append(DNN(units=model_args.units, 
+    copied_model = DNN(units=model_args.units, 
                             activations=model_args.activations,
-                            init_value=weights))
+                            init_value=weights)
+    return copied_model
     
 def train_source_models(sample_gap=20):
     source_iter_train = iter(source_train_ds)
     source_iter_test = iter(source_test_ds)
+    model_buffer = []
     for e in range(dataloader.source_info.epochs):
         mt_loss_fn.reset_states()
         train_metrics.reset_states()
@@ -71,7 +72,7 @@ def train_source_models(sample_gap=20):
             data = source_iter_train.get_next()
             train_loss, acc = _train_step(inputs=data["inputs"], labels=data["labels"])
             if (e*dataloader.source_info.train_step + step)%sample_gap ==0:
-                copy_weights(model.trainable_variables)
+                model_buffer.append(copy_weights(model.trainable_variables))
         for step in range(dataloader.source_info.test_step):
             data = source_iter_test.get_next()
             test_loss, test_acc = _test_step(inputs=data["inputs"], labels=data["labels"])
@@ -80,6 +81,8 @@ def train_source_models(sample_gap=20):
                                                                     train_metrics.result().numpy(),
                                                                     mte_loss_fn.result().numpy(),
                                                                     test_metrics.result().numpy()))
+    return model_buffer
+
 def gmodel_test_step(gmodel, inputs, labels):
     predictions = gmodel(inputs)
     loss = test_loss_fn(labels, predictions)
@@ -87,7 +90,7 @@ def gmodel_test_step(gmodel, inputs, labels):
     mte_loss_fn.update_state(loss)
     return loss, metrics
 
-def test_models_on_targets():
+def test_models_on_targets(model_buffer):
     source_iter_test = iter(source_test_ds)
     for idx in range(len(model_buffer)):
         mte_loss_fn.reset_states()
@@ -190,14 +193,14 @@ def L2L(model_buffer, n=32):
 def main():
     
     # generate base models
-    train_source_models(sample_gap=20) 
+    model_buffer = train_source_models(sample_gap=20) 
     
     # save/load to/from local
     # model_buffer = []
     hard_save_gmodels(gmodels=model_buffer)
     model_buffer = load_gmodels_hard()
     
-    test_models_on_targets()
+    test_models_on_targets(model_buffer)
     L2L(model_buffer = model_buffer)
 
 
