@@ -160,25 +160,23 @@ def L2L(model_buffer, n=32):
     gopt = optimizer
     import random
 
-    for e in range(100):
+    for e in range(10000):
         mt_loss_fn.reset_states()
         train_metrics.reset_states()
         mte_loss_fn.reset_states()
         test_metrics.reset_states()
         max_metrics.reset_states()
+        
+        model_idx = random.sample(range(len(model_buffer)), n)
+        gmodels = [model_buffer[idx] for idx in model_idx]
+        
         for step in range(1):
-            model_idx = random.sample(range(len(model_buffer)), n)
-            # model_idx = []
-            gmodels = [model_buffer[idx] for idx in model_idx]
             train_loss, train_acc = _gmodel_train_step(gmodels=gmodels, 
                                                     inputs=data["inputs"], 
                                                     labels=data["labels"],
                                                     gopt=gopt)
         # for step in range()
         for step in range(100):
-            model_idx = random.sample(range(len(model_buffer)), n)
-            # model_idx = [-n, -n+386,-n+128, -n+256, -n+96, -n+4,-n+8,-n+16,-n+32,-n+64,-n+2,-n+1]
-            gmodels = [model_buffer[idx] for idx in model_idx]
             te_data = target_iter_test.get_next()
             test_loss, test_acc = _gmodel_test_step(gmodels=gmodels, 
                                                     inputs=te_data["inputs"], 
