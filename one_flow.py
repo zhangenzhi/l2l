@@ -4,6 +4,7 @@ import tensorflow as tf
 from easydict import EasyDict as edict
 
 # modules
+from utiliz import check_mkdir
 from dataloader import Cifar10DataLoader
 from dnn import DNN
 
@@ -99,6 +100,7 @@ def test_models_on_targets():
                                                         test_metrics.result().numpy()))
 
 def hard_save_gmodels(gmodels, path="./models"):
+    check_mkdir(path=path)
     for idx in range(len(gmodels)):
         mpath = os.path.join(path, "gmodel_{}".format(idx))
         gmodels[idx].save(mpath, overwrite=True, save_format='tf')
