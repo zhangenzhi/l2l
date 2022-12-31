@@ -190,11 +190,11 @@ def L2L(model_buffer, n=32):
 def main():
     
     # generate base models
-    # train_source_models(sample_gap=20) 
+    train_source_models(sample_gap=20) 
     
     # save/load to/from local
     # model_buffer = []
-    # hard_save_gmodels(gmodels=model_buffer)
+    hard_save_gmodels(gmodels=model_buffer)
     model_buffer = load_gmodels_hard()
     
     test_models_on_targets()
