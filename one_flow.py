@@ -193,15 +193,15 @@ def L2L(model_buffer, n=32):
 def main():
     
     # generate base models
-    model_buffer = train_source_models(sample_gap=20) 
+    # model_buffer = train_source_models(sample_gap=20) 
     
     # save/load to/from local
     # model_buffer = []
-    test_models_on_targets(model_buffer)
-    hard_save_gmodels(gmodels=model_buffer)
-    
-    # model_buffer = load_gmodels_hard()
     # test_models_on_targets(model_buffer)
+    # hard_save_gmodels(gmodels=model_buffer)
+    
+    model_buffer = load_gmodels_hard()
+    test_models_on_targets(model_buffer)
     
     L2L(model_buffer = model_buffer)
 
