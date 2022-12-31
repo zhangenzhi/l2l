@@ -197,12 +197,13 @@ def main():
     
     # save/load to/from local
     # model_buffer = []
-    hard_save_gmodels(gmodels=model_buffer)
-    model_buffer = load_gmodels_hard()
-    
     test_models_on_targets(model_buffer)
+    hard_save_gmodels(gmodels=model_buffer)
+    
+    # model_buffer = load_gmodels_hard()
+    # test_models_on_targets(model_buffer)
+    
     L2L(model_buffer = model_buffer)
-
 
 if __name__== "__main__":
     main()
