@@ -152,23 +152,22 @@ def _gmodel_test_step(gmodels, inputs, labels):
     max_metrics.update_state(max(m_metrics))
     return losses, metrics
 
-def L2L(model_buffer, n=32):
+def L2L(model_buffer, n=128):
     target_iter_train = iter(target_train_ds)
     target_iter_test = iter(target_test_ds)
     data = target_iter_train.get_next()
     
     gopt = optimizer
     import random
-
+    model_idx = random.sample(range(len(model_buffer)), n)
+    gmodels = [model_buffer[idx] for idx in model_idx]
+    
     for e in range(10000):
         mt_loss_fn.reset_states()
         train_metrics.reset_states()
         mte_loss_fn.reset_states()
         test_metrics.reset_states()
         max_metrics.reset_states()
-        
-        model_idx = random.sample(range(len(model_buffer)), n)
-        gmodels = [model_buffer[idx] for idx in model_idx]
         
         for step in range(1):
             train_loss, train_acc = _gmodel_train_step(gmodels=gmodels, 
