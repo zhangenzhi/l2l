@@ -159,7 +159,7 @@ def L2L(model_buffer, n=32):
     optimizer.lr = 0.01
     gopt = optimizer
     import random
-    model_idx = random.sample(range(512, len(model_buffer)), n)
+    model_idx = random.sample(range(900, len(model_buffer)), n)
     gmodels = [model_buffer[idx] for idx in model_idx]
     
     for e in range(10000):
