@@ -152,7 +152,7 @@ def _gmodel_test_step(gmodels, inputs, labels):
     max_metrics.update_state(max(m_metrics))
     return losses, metrics
 
-def L2L(model_buffer, n=128):
+def L2L(model_buffer, n=32):
     target_iter_train = iter(target_train_ds)
     target_iter_test = iter(target_test_ds)
     data = target_iter_train.get_next()
