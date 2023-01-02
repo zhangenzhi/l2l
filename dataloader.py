@@ -21,9 +21,9 @@ class Cifar10DataLoader:
         source_info.epochs = self.dataloader_args['epochs']
         
         target_info = edict()
-        target_info.train_size = self.dataloader_args['batch_size']*100
+        target_info.train_size = self.dataloader_args['batch_size']*2
         target_info.test_size = int(self.info['test_size']/2)
-        target_info.batch_size = self.dataloader_args['batch_size']
+        target_info.batch_size = self.dataloader_args['batch_size']*2
         target_info.train_step = 1
         target_info.epochs = -1
         return source_info, target_info

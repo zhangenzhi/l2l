@@ -175,7 +175,7 @@ def L2L(model_buffer, n=32):
                                                     labels=data["labels"],
                                                     gopt=gopt)
         # for step in range()
-        for step in range(100):
+        for step in range(10):
             te_data = target_iter_test.get_next()
             test_loss, test_acc = _gmodel_test_step(gmodels=gmodels, 
                                                     inputs=te_data["inputs"], 
