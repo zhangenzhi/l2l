@@ -156,7 +156,7 @@ def L2L(model_buffer, n=32):
     target_iter_train = iter(target_train_ds)
     target_iter_test = iter(target_test_ds)
     data = target_iter_train.get_next()
-    
+    optimizer.lr = 0.01
     gopt = optimizer
     import random
     model_idx = random.sample(range(512, len(model_buffer)), n)
